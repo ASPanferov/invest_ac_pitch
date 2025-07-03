@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angel Connect - Investment Proposal</title>
+    <style>
+        .language-switcher {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 12px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .lang-btn {
+            padding: 6px 12px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        
+        .lang-btn:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+        
+        .lang-btn.active {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+        
+        .content-ru { display: none; }
+        .content-en { display: block; }
+        
+        [data-lang="ru"] .content-ru { display: block; }
+        [data-lang="ru"] .content-en { display: none; }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #f8f9fa;
+            color: #333333;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        .presentation {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .slide {
+            width: 297mm;
+            height: 210mm;
+            padding: 15mm 20mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #ffffff;
+            margin: 0 auto 15px;
+            position: relative;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            border-radius: 0;
+            overflow: hidden;
+            page-break-after: always;
+        }
+        
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #2563eb;
+        }
+        
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: #2563eb;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        h1 {
+            font-size: 1.8em;
+            font-weight: 800;
+            color: #1e293b;
+            text-align: center;
+            margin-bottom: 12px;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+        
+        h2 {
+            font-size: 1.5em;
+            color: #1e293b;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+        
+        h3 {
+            font-size: 1.1em;
+            color: #2563eb;
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+        
+        .subtitle {
+            font-size: 0.95em;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 20px;
+            max-width: 600px;
+            font-weight: 400;
+            line-height: 1.4;
+        }
+        
+        .content {
+            max-width: 240mm;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+        
+        .three-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .highlight-box {
+            background: #2563eb;
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .highlight-box h3 {
+            color: white;
+            font-size: 1.2em;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        
+        .highlight-box p {
+            font-size: 0.8em;
+            line-height: 1.3;
+            opacity: 0.95;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin: 15px 0;
+        }
+        
+        .stat-item {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-item:hover {
+            border-color: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.15);
+        }
+        
+        .stat-number {
+            font-size: 1.4em;
+            font-weight: 800;
+            color: #2563eb;
+            display: block;
+        }
+        
+        .stat-label {
+            color: #64748b;
+            font-size: 0.7em;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+        
+        .card {
+            background: #ffffff;
+            padding: 12px;
+            margin: 6px 0;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.1);
+            transform: translateY(-2px);
+            border-color: #2563eb;
+        }
+        
+        .card h4 {
+            color: #1e293b;
+            font-size: 0.9em;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        
+        .card p {
+            color: #64748b;
+            line-height: 1.4;
+            font-size: 0.75em;
+        }
+        
+        .team-member {
+            background: #ffffff;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .team-member:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.15);
+        }
+        
+        .team-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1em;
+            font-weight: 700;
+            margin: 0 auto 8px;
+        }
+        
+        .team-member h4 {
+            color: #1e293b;
+            margin-bottom: 4px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        
+        .team-member .role {
+            color: #2563eb;
+            font-weight: 500;
+            margin-bottom: 6px;
+            font-size: 0.65em;
+        }
+        
+        .team-member p {
+            color: #64748b;
+            font-size: 0.6em;
+            line-height: 1.3;
+        }
+        
+        .logo {
+            font-size: 1.6em;
+            font-weight: 900;
+            color: #2563eb;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+        
+        .warning-box {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        .warning-box h4 {
+            color: #92400e;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        
+        .warning-box p {
+            color: #92400e;
+            font-size: 0.75em;
+        }
+        
+        .success-box {
+            background: #dcfce7;
+            border: 1px solid #22c55e;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        .success-box h4 {
+            color: #15803d;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        
+        .success-box p {
+            color: #15803d;
+            font-size: 0.75em;
+        }
+        
+        .cta-section {
+            background: #2563eb;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.2);
+        }
+        
+        .cta-section h3 {
+            color: white;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .contact-item {
+            background: rgba(255,255,255,0.9);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.1);
+        }
+        
+        .contact-item h4 {
+            color: #1e293b;
+            margin-bottom: 4px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        
+        .contact-item p {
+            color: #64748b;
+            font-size: 0.7em;
+            line-height: 1.2;
+        }
+        
+        @media print {
+            .slide {
+                page-break-after: always;
+                box-shadow: none;
+            }
+            
+            body {
+                background: white;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .slide {
+                width: 100%;
+                height: auto;
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            h2 {
+                font-size: 1.6em;
+            }
+            
+            .two-column,
+            .three-column {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body data-lang="en">
+    <div class="language-switcher">
+        <a href="angel_connect_presentation.html" class="lang-btn">РУС</a>
+        <button class="lang-btn active">ENG</button>
+    </div>
+    
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide">
+            <div class="slide-number">1/8</div>
+            <div class="content">
+                <div class="logo">ANGEL CONNECT</div>
+                <h1>Investment Proposal</h1>
+                <p class="subtitle">Uzbekistan's First Private Pre-Seed Incubator<br>
+                <span style="font-size: 0.9em;">Proof of Concept: $500,000 for 20%</span></p>
+                
+                <div class="highlight-box" style="margin-top: 20px;">
+                    <h3>$500,000 for 20%</h3>
+                    <p style="font-size: 0.75em; line-height: 1.2;">$2.5M Valuation • Pilot Program<br>24-30 Startups • Proof of Concept</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Market Opportunity -->
+        <div class="slide">
+            <div class="slide-number">2/8</div>
+            <div class="content">
+                <h2>Uzbekistan Market Opportunity</h2>
+                <p class="subtitle">Rapidly growing yet emerging ecosystem with significant potential</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number">400+</span>
+                        <div class="stat-label">Active Startups</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">$54M</span>
+                        <div class="stat-label">Total VC Capital</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">11</span>
+                        <div class="stat-label">Active VC Funds</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">$430K</span>
+                        <div class="stat-label">Average Seed Round</div>
+                    </div>
+                </div>
+                
+                <div class="two-column" style="margin-top: 20px;">
+                    <div>
+                        <h3>📈 Impressive Growth</h3>
+                        <div class="card">
+                            <h4>Global Recognition</h4>
+                            <p>Uzbekistan entered top-100 global startup ecosystem index for the first time (98th place)</p>
+                        </div>
+                        <div class="card">
+                            <h4>Record Growth: +132%</h4>
+                            <p>Second-best ecosystem growth rate globally in 2024</p>
+                        </div>
+                        <div class="card">
+                            <h4>First Unicorn</h4>
+                            <p>Uzum reached $1.1B valuation, raised $114M in 2024</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3>🎯 Our Niche</h3>
+                        <div class="highlight-box">
+                            <h3>Pre-seed Gap</h3>
+                            <p>Lack of private incubators specializing in earliest stages</p>
+                        </div>
+                        <div class="success-box" style="margin-top: 15px;">
+                            <h4>✅ Government Support</h4>
+                            <p>IT Park, 0% tax benefits, Digital Startups program with co-investment up to $100K</p>
+                        </div>
+                        <div class="card">
+                            <h4>Growing Talent</h4>
+                            <p>52% investments from local funds, growing expertise, young population</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Our Model -->
+        <div class="slide">
+            <div class="slide-number">3/8</div>
+            <div class="content">
+                <h2>Pilot Incubation Model</h2>
+                <p class="subtitle">Starting with proof of concept before scaling</p>
+                
+                <div class="three-column">
+                    <div class="card">
+                        <h4>🎯 Cohort 1 (Pilot)</h4>
+                        <p><strong>8-10 startups</strong><br>
+                        3 months<br>
+                        $8-12K investment<br>
+                        15-20% equity</p>
+                    </div>
+                    <div class="card">
+                        <h4>🚀 Cohort 2</h4>
+                        <p><strong>8-10 startups</strong><br>
+                        Improved methodology<br>
+                        $8-12K investment<br>
+                        15-20% equity</p>
+                    </div>
+                    <div class="card">
+                        <h4>⭐ Cohort 3</h4>
+                        <p><strong>8-10 startups</strong><br>
+                        Optimized processes<br>
+                        $8-12K investment<br>
+                        15-20% equity</p>
+                    </div>
+                </div>
+                
+                <div class="two-column" style="margin-top: 20px;">
+                    <div>
+                        <h3>📋 Program Includes</h3>
+                        <div class="card">
+                            <h4>Weekly Mentoring</h4>
+                            <p>Individual work with industry experts</p>
+                        </div>
+                        <div class="card">
+                            <h4>Training Modules</h4>
+                            <p>Product-market fit, unit economics, fundraising</p>
+                        </div>
+                        <div class="card">
+                            <h4>Investor Readiness</h4>
+                            <p>Pitch deck preparation, financial model, due diligence</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3>🔍 Strict Selection</h3>
+                        <div class="highlight-box">
+                            <h3>< 8%</h3>
+                            <p>Application acceptance rate</p>
+                        </div>
+                        <div class="card" style="margin-top: 10px;">
+                            <h4>Team of 2-4 people</h4>
+                            <p>Industry experience, full-time commitment to project</p>
+                        </div>
+                        <div class="card">
+                            <h4>Working MVP</h4>
+                            <p>Product with first users and traction</p>
+                        </div>
+                        <div class="card">
+                            <h4>Scaling Potential</h4>
+                            <p>TAM $10M+, international expansion opportunity</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Financial Model -->
+        <div class="slide">
+            <div class="slide-number">4/8</div>
+            <div class="content">
+                <h2>Realistic Financial Model</h2>
+                <p class="subtitle">Conservative projections based on emerging market data</p>
+                
+                <div class="highlight-box" style="margin-bottom: 20px;">
+                    <h3>$500,000 for 20%</h3>
+                    <p style="font-size: 0.8em;">Valuation: $2.5M • Focus on proof of concept</p>
+                </div>
+                
+                <div class="two-column">
+                    <div>
+                        <h3>💰 Capital Allocation</h3>
+                        <div class="stats-grid" style="margin: 15px 0;">
+                            <div class="stat-item">
+                                <span class="stat-number">$240K</span>
+                                <div class="stat-label">Startup Investments (48%)</div>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">$180K</span>
+                                <div class="stat-label">Operating Expenses (36%)</div>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">$80K</span>
+                                <div class="stat-label">Marketing & Development (16%)</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3>📊 Realistic Projections</h3>
+                        <div class="card">
+                            <h4>Conservative Scenario</h4>
+                            <p><strong>12% IRR</strong> • 15% successful exits<br>
+                            Average multiple: 2-3x</p>
+                        </div>
+                        <div class="card">
+                            <h4>Base Scenario</h4>
+                            <p><strong>18% IRR</strong> • 20% successful exits<br>
+                            Average multiple: 3-5x</p>
+                        </div>
+                        <div class="card">
+                            <h4>Optimistic Scenario</h4>
+                            <p><strong>25% IRR</strong> • 25% successful exits<br>
+                            One big success: 20x+</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="success-box" style="margin-top: 15px;">
+                    <h4>🎯 18-Month Goals</h4>
+                    <p><strong>24-30 startups</strong> in portfolio • <strong>5-8</strong> raised follow-on rounds • <strong>$800K-1.5M</strong> follow-on investments</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Fund Utilization -->
+        <div class="slide">
+            <div class="slide-number">5/8</div>
+            <div class="content">
+                <h2>Fund Utilization Plan</h2>
+                <p class="subtitle">Every dollar directed toward value creation and model validation</p>
+                
+                <div class="two-column">
+                    <div>
+                        <h3>💼 Operating Expenses (18 months)</h3>
+                        <div class="card">
+                            <h4>Team: $120,000</h4>
+                            <p>• Managing Partner: $4,000/month<br>
+                            • Program Manager: $2,500/month<br>
+                            • Coordinator/Analyst: $1,000/month</p>
+                        </div>
+                        <div class="card">
+                            <h4>Office & Infrastructure: $35,000</h4>
+                            <p>• Rent: $1,200/month<br>
+                            • IT & Communications: $400/month<br>
+                            • Legal Services: $300/month</p>
+                        </div>
+                        <div class="card">
+                            <h4>Events: $25,000</h4>
+                            <p>• Demo Days: $5,000 × 3<br>
+                            • Workshops & Networking: $10,000</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3>🚀 Ecosystem Development</h3>
+                        <div class="card">
+                            <h4>Startup Attraction: $30,000</h4>
+                            <p>• Digital marketing<br>
+                            • University partnerships<br>
+                            • Conference participation</p>
+                        </div>
+                        <div class="card">
+                            <h4>Mentor Network: $25,000</h4>
+                            <p>• Expert recruitment<br>
+                            • Mentor compensation<br>
+                            • Training programs</p>
+                        </div>
+                        <div class="card">
+                            <h4>Investment Platform: $25,000</h4>
+                            <p>• CRM & analytics<br>
+                            • Due diligence processes<br>
+                            • Investor relations</p>
+                        </div>
+                        
+                        <div class="highlight-box" style="margin-top: 15px;">
+                            <h3>Efficiency</h3>
+                            <p>$10 operational spend generates $1 in portfolio value</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stats-grid" style="margin-top: 20px;">
+                    <div class="stat-item">
+                        <span class="stat-number">$10K</span>
+                        <div class="stat-label">Average startup investment</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">4:3</span>
+                        <div class="stat-label">Investment to OpEx ratio</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">18 mos</span>
+                        <div class="stat-label">Runway without additional funding</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Team -->
+        <div class="slide">
+            <div class="slide-number">6/8</div>
+            <div class="content">
+                <h2>Angel Connect Team</h2>
+                <p class="subtitle">Experienced entrepreneurs with deep local market understanding</p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px;">
+                    <div class="team-member">
+                        <div class="team-avatar">SA</div>
+                        <h4>Sirojiddin Aslonov</h4>
+                        <div class="role">Founder & CEO</div>
+                        <p>Angel Connect founder. Serial entrepreneur with experience in creating and developing startups in the region.</p>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="team-avatar">VT</div>
+                        <h4>Vitaly Tarasyuk</h4>
+                        <div class="role">Co-Founder</div>
+                        <p>ProBusiness business club founder and Angel Connect co-founder. Expert in ecosystem development.</p>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="team-avatar">AP</div>
+                        <h4>Artem Panferov</h4>
+                        <div class="role">Co-Founder & CTO</div>
+                        <p>Serial entrepreneur, AI LAB and EndCode founder. Expert in AI solutions.</p>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="team-avatar">AS</div>
+                        <h4>Artem Strelchenok</h4>
+                        <div class="role">Strategic Advisor</div>
+                        <p>Consulting and strategic planning for startups</p>
+                    </div>
+                </div>
+                
+                <div class="two-column" style="margin-top: 20px;">
+                    <div>
+                        <h3>🎯 Our Achievements</h3>
+                        <div class="card">
+                            <h4>3 Successful Hackathons</h4>
+                            <p>500+ participants, 50+ formed teams, AI-focused projects</p>
+                        </div>
+                        <div class="card">
+                            <h4>200+ Entrepreneur Community</h4>
+                            <p>Active ecosystem with regular events and networking</p>
+                        </div>
+                        <div class="card">
+                            <h4>50+ Mentor Network</h4>
+                            <p>Experts from AI, fintech, e-commerce, and venture investments</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3>🤝 Advisory Board</h3>
+                        <div class="success-box">
+                            <h4>✅ Areas for Improvement</h4>
+                            <p>Attract 1-2 partners with direct VC experience to increase credibility</p>
+                        </div>
+                        <div class="card">
+                            <h4>Partnerships</h4>
+                            <p>IT Park Uzbekistan, leading universities, corporations</p>
+                        </div>
+                        <div class="card">
+                            <h4>International Connections</h4>
+                            <p>Contacts with regional VCs and accelerators</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Roadmap & Risks -->
+        <div class="slide">
+            <div class="slide-number">7/8</div>
+            <div class="content">
+                <h2>Development Plan & Risk Management</h2>
+                <p class="subtitle">Phased approach with clear development milestones</p>
+                
+                <div class="two-column">
+                    <div>
+                        <h3>📅 18-Month Plan</h3>
+                        <div class="card">
+                            <h4>Months 1-3: Launch</h4>
+                            <p>• Investment finalization<br>
+                            • 1st cohort launch (8-10 startups)<br>
+                            • Operational process creation</p>
+                        </div>
+                        <div class="card">
+                            <h4>Months 4-9: Optimization</h4>
+                            <p>• 2nd cohort with improvements<br>
+                            • First results and follow-on rounds<br>
+                            • Mentor network expansion</p>
+                        </div>
+                        <div class="card">
+                            <h4>Months 10-18: Scaling</h4>
+                            <p>• 3rd cohort<br>
+                            • Series A fund preparation<br>
+                            • International partnerships</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3>⚠️ Key Risks</h3>
+                        <div class="warning-box">
+                            <h4>Macroeconomic Risks</h4>
+                            <p>Dependence on political stability and currency fluctuations</p>
+                        </div>
+                        <div class="warning-box">
+                            <h4>Competition</h4>
+                            <p>Increased IT Park activity or international player entry</p>
+                        </div>
+                        <div class="warning-box">
+                            <h4>Market Size</h4>
+                            <p>Local market limitations, need for international expansion focus</p>
+                        </div>
+                        <div class="success-box">
+                            <h4>✅ Risk Mitigation</h4>
+                            <p>• Portfolio diversification<br>
+                            • Focus on international scalable projects<br>
+                            • Government partnership</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight-box" style="margin-top: 20px;">
+                    <h3>🎯 Key Success Metrics</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 12px; color: white; font-size: 0.75em;">
+                        <div>
+                            <strong>Portfolio Development</strong><br>
+                            70%+ startups achieve growth milestones
+                        </div>
+                        <div>
+                            <strong>Investment Attraction</strong><br>
+                            20%+ attract follow-on rounds
+                        </div>
+                        <div>
+                            <strong>Ecosystem Development</strong><br>
+                            3x active community growth
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Call to Action -->
+        <div class="slide">
+            <div class="slide-number">8/8</div>
+            <div class="content">
+                <h2>Ready for Partnership</h2>
+                <p class="subtitle">Joint creation of Central Asia's first successful private incubator</p>
+                
+                <div class="cta-section">
+                    <h3>🚀 What's Next?</h3>
+                    <div class="three-column" style="margin-top: 15px;">
+                        <div class="contact-item">
+                            <h4>1. Due Diligence</h4>
+                            <p>Detailed financial model, documents, pilot cases</p>
+                        </div>
+                        <div class="contact-item">
+                            <h4>2. Pilot Investment</h4>
+                            <p>$500K for 20% for proof of concept</p>
+                        </div>
+                        <div class="contact-item">
+                            <h4>3. Scale-up</h4>
+                            <p>Series A fund round after successful pilot</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 15px;">
+                    <div class="contact-item" style="background: #f8fafc; color: #1e293b;">
+                        <h4>👥 Team</h4>
+                        <p style="font-size: 0.6em; line-height: 1.3;">Vitaly: https://t.me/tarasiuk1<br>
+                        Artem P: https://t.me/arpanferov<br>
+                        Sirojiddin: https://t.me/asn009<br>
+                        Artem S: https://t.me/astr40</p>
+                    </div>
+                    <div class="contact-item" style="background: #f8fafc; color: #1e293b;">
+                        <h4>🌐 Resources</h4>
+                        <p>angelconnect.uz<br>
+                        Presentation, financial model, documents</p>
+                    </div>
+                    <div class="contact-item" style="background: #f8fafc; color: #1e293b;">
+                        <h4>📱 Channel</h4>
+                        <p>https://t.me/networkangelconnect<br>
+                        News and updates</p>
+                    </div>
+                </div>
+                
+                <div class="success-box" style="margin-top: 20px;">
+                    <h4>💼 Ready to Execute</h4>
+                    <p>We're ready to start accepting applications 3 weeks after agreement signing. First Demo Day planned for Q1 2026.</p>
+                </div>
+                
+                <div class="highlight-box" style="margin-top: 15px;">
+                    <h3>Thank You!</h3>
+                    <p>Angel Connect - building the future of Central Asia's startup ecosystem together</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
