@@ -25,7 +25,6 @@ Our conservative financial projections show:
 - **Sirojiddin Aslonov** - Founder & CEO
 - **Vitaly Tarasyuk** - Co-Founder (ProBusiness club founder)  
 - **Artem Panferov** - Co-Founder & CTO (AI LAB founder)
-- **Artem Strelchenok** - Strategic Advisor
 
 **Track Record:**
 - 3 successful AI-focused hackathons
@@ -38,7 +37,7 @@ Our conservative financial projections show:
 **View the presentation online:**
 - **English**: [Live Demo](https://aspanferov.github.io/invest_ac_pitch/)  
 - **Russian**: [Русская версия](https://aspanferov.github.io/invest_ac_pitch/angel_connect_presentation.html)
-- **Startup Flow Schema**: [Интерактивная схема](https://aspanferov.github.io/invest_ac_pitch/schema.html)
+- **Startup Flow Schema**: [Интерактивная схема](https://aspanferov.github.io/invest_ac_pitch/schema-simple.html)
 
 ## 📁 Repository Structure
 
@@ -46,7 +45,7 @@ Our conservative financial projections show:
 /
 ├── index.html                          # English presentation
 ├── angel_connect_presentation.html     # Russian presentation
-├── schema.html                        # Interactive startup flow schema
+├── schema-simple.html                 # Interactive startup flow schema (SVG-based)
 ├── README.md                          # This documentation
 └── assets/                           # Supporting materials
 ```
@@ -66,7 +65,6 @@ Our conservative financial projections show:
 - Vitaly: https://t.me/tarasiuk1
 - Artem P: https://t.me/arpanferov  
 - Sirojiddin: https://t.me/asn009
-- Artem S: https://t.me/astr40
 
 **Resources:**
 - Website: [angelconnect.uz](https://angelconnect.uz)
@@ -105,7 +103,7 @@ Our new **interactive visualization** shows the complete journey of startups thr
 - **Real metrics**: Acceptance rates, success statistics, timelines
 - **Process transparency**: Clear visualization of startup journey
 
-**[→ View Interactive Schema](https://aspanferov.github.io/invest_ac_pitch/schema.html)**
+**[→ View Interactive Schema](https://aspanferov.github.io/invest_ac_pitch/schema-simple.html)**
 
 ---
 

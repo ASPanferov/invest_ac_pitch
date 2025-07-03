@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angel Connect - Схема развития стартапов</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #f8f9fa;
+            color: #333333;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8em;
+            font-weight: 900;
+            color: #2563eb;
+            letter-spacing: -0.02em;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-tab {
+            padding: 8px 16px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        
+        .nav-tab:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+        
+        .nav-tab.active {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+        
+        .container {
+            margin-top: 80px;
+            padding: 20px;
+            min-height: calc(100vh - 80px);
+        }
+        
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-title h1 {
+            font-size: 2.5em;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+        
+        .page-title p {
+            font-size: 1.1em;
+            color: #64748b;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .flow-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .flow-diagram {
+            width: 100%;
+            overflow-x: auto;
+            min-height: 600px;
+        }
+        
+        .node {
+            position: absolute;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 160px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .node:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.15);
+        }
+        
+        .node.start {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: 2px solid #2563eb;
+        }
+        
+        .node.process {
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            color: #1e293b;
+        }
+        
+        .node.milestone {
+            background: linear-gradient(135deg, #059669, #047857);
+            color: white;
+            border: 2px solid #059669;
+        }
+        
+        .node.decision {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            color: #92400e;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .node.exit {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+            border: 2px solid #dc2626;
+        }
+        
+        .node-title {
+            font-weight: 700;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        
+        .node-subtitle {
+            font-size: 0.75em;
+            opacity: 0.9;
+            line-height: 1.3;
+        }
+        
+        .node-stats {
+            font-size: 0.7em;
+            margin-top: 5px;
+            font-weight: 600;
+        }
+        
+        .flow-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .flow-content {
+            position: relative;
+            height: 800px;
+            z-index: 2;
+        }
+        
+        .info-panels {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .info-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .info-panel h3 {
+            color: #2563eb;
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .info-panel ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .info-panel li {
+            padding: 5px 0;
+            color: #64748b;
+            font-size: 0.9em;
+        }
+        
+        .info-panel li::before {
+            content: "→";
+            color: #2563eb;
+            margin-right: 8px;
+            font-weight: bold;
+        }
+        
+        .stat-highlight {
+            background: #2563eb;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.8em;
+        }
+        
+        .legend {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            font-size: 0.8em;
+            z-index: 10;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">ANGEL CONNECT</div>
+            <div class="nav-tabs">
+                <a href="angel_connect_presentation.html" class="nav-tab">Презентация</a>
+                <a href="schema-simple.html" class="nav-tab active">Схема</a>
+                <a href="index.html" class="nav-tab">English</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="page-title">
+            <h1>Схема развития стартапов</h1>
+            <p>Визуальная карта пути стартапов через программу Angel Connect от заявки до exit</p>
+        </div>
+        
+        <div class="flow-container">
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #2563eb, #1d4ed8);"></div>
+                    <span>Стартовые точки</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f8fafc; border: 1px solid #cbd5e1;"></div>
+                    <span>Процессы</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #059669, #047857);"></div>
+                    <span>Достижения</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #fef3c7; border: 1px solid #f59e0b;"></div>
+                    <span>Решения</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #dc2626, #b91c1c);"></div>
+                    <span>Exit точки</span>
+                </div>
+            </div>
+            
+            <div class="flow-content">
+                <!-- SVG для стрелок -->
+                <svg class="flow-svg" viewBox="0 0 1200 800">
+                    <!-- Главный поток -->
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb" />
+                        </marker>
+                    </defs>
+                    
+                    <!-- Горизонтальные стрелки -->
+                    <line x1="200" y1="80" x2="280" y2="80" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowhead)" />
+                    <line x1="460" y1="80" x2="540" y2="80" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowhead)" />
+                    <line x1="720" y1="80" x2="800" y2="80" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowhead)" />
+                    
+                    <!-- От решения вниз -->
+                    <line x1="860" y1="140" x2="860" y2="200" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowhead)" />
+                    <line x1="860" y1="120" x2="980" y2="80" stroke="#dc2626" stroke-width="2" marker-end="url(#arrowhead)" />
+                    
+                    <!-- К программе -->
+                    <line x1="200" y1="240" x2="280" y2="200" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowhead)" />
+                    <line x1="200" y1="240" x2="280" y2="280" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowhead)" />
+                    
+                    <!-- От процессов к развитию -->
+                    <line x1="460" y1="240" x2="540" y2="240" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowhead)" />
+                    <line x1="460" y1="320" x2="540" y2="240" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowhead)" />
+                    
+                    <!-- К Demo Day -->
+                    <line x1="200" y1="320" x2="200" y2="400" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowhead)" />
+                    
+                    <!-- От Demo Day к решению -->
+                    <line x1="280" y1="440" x2="360" y2="440" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowhead)" />
+                    
+                    <!-- От решения к инвестициям -->
+                    <line x1="480" y1="440" x2="560" y2="440" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowhead)" />
+                    <line x1="440" y1="480" x2="440" y2="560" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)" />
+                    
+                    <!-- К масштабированию -->
+                    <line x1="720" y1="440" x2="800" y2="440" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowhead)" />
+                    
+                    <!-- К exit -->
+                    <line x1="980" y1="440" x2="1060" y2="440" stroke="#dc2626" stroke-width="2" marker-end="url(#arrowhead)" />
+                    
+                    <!-- К поддержке -->
+                    <line x1="200" y1="560" x2="200" y2="640" stroke="#059669" stroke-width="2" marker-end="url(#arrowhead)" />
+                    <line x1="560" y1="600" x2="280" y2="680" stroke="#059669" stroke-width="2" marker-end="url(#arrowhead)" />
+                </svg>
+                
+                <!-- Узлы диаграммы -->
+                <div class="node start" style="top: 50px; left: 50px;">
+                    <div class="node-title">Заявки стартапов</div>
+                    <div class="node-subtitle">Прием через сайт, рекомендации, хакатоны</div>
+                    <div class="node-stats">~300 заявок/поток</div>
+                </div>
+                
+                <div class="node process" style="top: 50px; left: 300px;">
+                    <div class="node-title">Первичный отбор</div>
+                    <div class="node-subtitle">Анализ по критериям</div>
+                    <div class="node-stats">~30 заявок проходят</div>
+                </div>
+                
+                <div class="node process" style="top: 50px; left: 560px;">
+                    <div class="node-title">Интервью</div>
+                    <div class="node-subtitle">Глубокое интервью и питч</div>
+                    <div class="node-stats">~15 команд проходят</div>
+                </div>
+                
+                <div class="node decision" style="top: 80px; left: 800px;">
+                    <div class="node-title">Принять?</div>
+                </div>
+                
+                <div class="node exit" style="top: 50px; left: 1000px;">
+                    <div class="node-title">Отказ</div>
+                    <div class="node-subtitle">Обратная связь</div>
+                </div>
+                
+                <div class="node milestone" style="top: 200px; left: 50px;">
+                    <div class="node-title">Инкубационная программа</div>
+                    <div class="node-subtitle">3 месяца интенсивного развития</div>
+                    <div class="node-stats">8-10 стартапов/поток</div>
+                </div>
+                
+                <div class="node process" style="top: 170px; left: 300px;">
+                    <div class="node-title">Менторинг</div>
+                    <div class="node-subtitle">Еженедельные сессии</div>
+                </div>
+                
+                <div class="node process" style="top: 250px; left: 300px;">
+                    <div class="node-title">Обучение</div>
+                    <div class="node-subtitle">PMF, Unit Economics</div>
+                </div>
+                
+                <div class="node process" style="top: 210px; left: 560px;">
+                    <div class="node-title">Развитие продукта</div>
+                    <div class="node-subtitle">MVP → Product-Market Fit</div>
+                </div>
+                
+                <div class="node milestone" style="top: 410px; left: 50px;">
+                    <div class="node-title">Demo Day</div>
+                    <div class="node-subtitle">Презентация инвесторам</div>
+                    <div class="node-stats">Каждые 3 месяца</div>
+                </div>
+                
+                <div class="node decision" style="top: 400px; left: 380px;">
+                    <div class="node-title">Интерес инвесторов?</div>
+                </div>
+                
+                <div class="node milestone" style="top: 410px; left: 580px;">
+                    <div class="node-title">Привлечение инвестиций</div>
+                    <div class="node-subtitle">Follow-on раунды</div>
+                    <div class="node-stats">~20% стартапов</div>
+                </div>
+                
+                <div class="node process" style="top: 410px; left: 820px;">
+                    <div class="node-title">Масштабирование</div>
+                    <div class="node-subtitle">Рост бизнеса</div>
+                </div>
+                
+                <div class="node exit" style="top: 410px; left: 1080px;">
+                    <div class="node-title">Exit</div>
+                    <div class="node-subtitle">IPO, M&A, Trade Sale</div>
+                    <div class="node-stats">3-7 лет</div>
+                </div>
+                
+                <div class="node process" style="top: 570px; left: 380px;">
+                    <div class="node-title">Самостоятельное развитие</div>
+                    <div class="node-subtitle">Без внешних инвестиций</div>
+                </div>
+                
+                <div class="node milestone" style="top: 650px; left: 50px;">
+                    <div class="node-title">Поддержка экосистемы</div>
+                    <div class="node-subtitle">Alumni network, менторство</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-panels">
+            <div class="info-panel">
+                <h3>📊 Ключевые метрики</h3>
+                <ul>
+                    <li>Прием заявок: <span class="stat-highlight">< 8%</span></li>
+                    <li>Завершение программы: <span class="stat-highlight">85%+</span></li>
+                    <li>Привлечение инвестиций: <span class="stat-highlight">20%+</span></li>
+                    <li>Средний чек: <span class="stat-highlight">$10K</span></li>
+                    <li>Время в программе: <span class="stat-highlight">3 месяца</span></li>
+                </ul>
+            </div>
+            
+            <div class="info-panel">
+                <h3>🎯 Критерии отбора</h3>
+                <ul>
+                    <li>Команда 2-4 человека</li>
+                    <li>Working MVP с пользователями</li>
+                    <li>TAM $10M+ потенциал</li>
+                    <li>Полная занятость проектом</li>
+                    <li>Международное масштабирование</li>
+                </ul>
+            </div>
+            
+            <div class="info-panel">
+                <h3>🚀 Программа развития</h3>
+                <ul>
+                    <li>Еженедельный менторинг</li>
+                    <li>Product-market fit</li>
+                    <li>Unit economics</li>
+                    <li>Fundraising подготовка</li>
+                    <li>Investor readiness</li>
+                </ul>
+            </div>
+            
+            <div class="info-panel">
+                <h3>💰 Инвестиционная схема</h3>
+                <ul>
+                    <li>Инвестиции: <span class="stat-highlight">$8-12K</span></li>
+                    <li>Доля: <span class="stat-highlight">15-20%</span></li>
+                    <li>Последующие раунды: до $100K+</li>
+                    <li>Exit горизонт: 3-7 лет</li>
+                    <li>Поддержка после программы</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

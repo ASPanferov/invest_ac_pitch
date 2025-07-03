@@ -286,8 +286,22 @@
         }
     </style>
     
-    <!-- React Flow CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/react-flow-renderer@10.3.17/dist/style.css">
+    <!-- GoJS CSS -->
+    <style>
+        .gojs-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .gojs-diagram {
+            width: 100%;
+            height: 100%;
+            background: #f8f9fa;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+    </style>
 </head>
 <body>
     <div class="header">
@@ -295,7 +309,7 @@
             <div class="logo">ANGEL CONNECT</div>
             <div class="nav-tabs">
                 <a href="angel_connect_presentation.html" class="nav-tab">Презентация</a>
-                <a href="schema.html" class="nav-tab active">Схема</a>
+                <a href="schema.html" class="nav-tab active">Схема GoJS</a>
                 <a href="index.html" class="nav-tab">English</a>
             </div>
         </div>
@@ -308,7 +322,9 @@
         </div>
         
         <div class="flow-container">
-            <div id="reactflow" class="reactflow-wrapper"></div>
+            <div id="gojs-diagram" class="gojs-container">
+                <div class="gojs-diagram"></div>
+            </div>
             
             <div class="legend">
                 <div class="legend-item">
@@ -381,318 +397,226 @@
         </div>
     </div>
 
-    <!-- React and ReactDOM via CDN -->
-    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <!-- GoJS Library -->
+    <script src="https://unpkg.com/gojs@3.0.2/release/go.js"></script>
     
-    <!-- Import maps for ES modules -->
-    <script type="importmap">
-    {
-        "imports": {
-            "react": "https://esm.sh/react@17",
-            "react-dom": "https://esm.sh/react-dom@17",
-            "react-flow-renderer": "https://esm.sh/react-flow-renderer@10"
+    <script>
+        // Инициализация GoJS
+        function init() {
+            // Создаем диаграмму
+            const $ = go.GraphObject.make;
+            const diagram = $(go.Diagram, document.querySelector(".gojs-diagram"), {
+                "undoManager.isEnabled": true,
+                layout: $(go.LayeredDigraphLayout, {
+                    direction: 90,
+                    layerSpacing: 35,
+                    columnSpacing: 5
+                }),
+                initialContentAlignment: go.Spot.Center
+            });
+
+            // Определяем шаблоны узлов
+            
+            // Стартовые узлы (синие)
+            diagram.nodeTemplateMap.add("start",
+                $(go.Node, "Auto",
+                    { locationSpot: go.Spot.Center },
+                    new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+                    $(go.Shape, "RoundedRectangle", {
+                        strokeWidth: 2,
+                        stroke: "#2563eb",
+                        fill: $(go.Brush, "Linear", { 0: "#2563eb", 1: "#1d4ed8" }),
+                        portId: "",
+                        cursor: "pointer",
+                        fromLinkable: true,
+                        toLinkable: true
+                    },
+                    new go.Binding("fill", "color")),
+                    $(go.TextBlock, {
+                        font: "bold 12px Montserrat, sans-serif",
+                        stroke: "white",
+                        margin: 8,
+                        maxSize: new go.Size(160, NaN),
+                        wrap: go.TextBlock.WrapFit,
+                        editable: false
+                    },
+                    new go.Binding("text", "text"))
+                )
+            );
+
+            // Процессы (светло-серые)
+            diagram.nodeTemplateMap.add("process",
+                $(go.Node, "Auto",
+                    { locationSpot: go.Spot.Center },
+                    new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+                    $(go.Shape, "RoundedRectangle", {
+                        strokeWidth: 2,
+                        stroke: "#cbd5e1",
+                        fill: "#f8fafc",
+                        portId: "",
+                        cursor: "pointer",
+                        fromLinkable: true,
+                        toLinkable: true
+                    }),
+                    $(go.TextBlock, {
+                        font: "bold 11px Montserrat, sans-serif",
+                        stroke: "#1e293b",
+                        margin: 8,
+                        maxSize: new go.Size(160, NaN),
+                        wrap: go.TextBlock.WrapFit,
+                        editable: false
+                    },
+                    new go.Binding("text", "text"))
+                )
+            );
+
+            // Достижения (зеленые)
+            diagram.nodeTemplateMap.add("milestone",
+                $(go.Node, "Auto",
+                    { locationSpot: go.Spot.Center },
+                    new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+                    $(go.Shape, "RoundedRectangle", {
+                        strokeWidth: 2,
+                        stroke: "#059669",
+                        fill: $(go.Brush, "Linear", { 0: "#059669", 1: "#047857" }),
+                        portId: "",
+                        cursor: "pointer",
+                        fromLinkable: true,
+                        toLinkable: true
+                    }),
+                    $(go.TextBlock, {
+                        font: "bold 11px Montserrat, sans-serif",
+                        stroke: "white",
+                        margin: 8,
+                        maxSize: new go.Size(160, NaN),
+                        wrap: go.TextBlock.WrapFit,
+                        editable: false
+                    },
+                    new go.Binding("text", "text"))
+                )
+            );
+
+            // Решения (желтые круги)
+            diagram.nodeTemplateMap.add("decision",
+                $(go.Node, "Auto",
+                    { locationSpot: go.Spot.Center },
+                    new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+                    $(go.Shape, "Circle", {
+                        strokeWidth: 2,
+                        stroke: "#f59e0b",
+                        fill: "#fef3c7",
+                        portId: "",
+                        cursor: "pointer",
+                        fromLinkable: true,
+                        toLinkable: true,
+                        width: 80,
+                        height: 80
+                    }),
+                    $(go.TextBlock, {
+                        font: "bold 10px Montserrat, sans-serif",
+                        stroke: "#92400e",
+                        margin: 8,
+                        maxSize: new go.Size(70, NaN),
+                        wrap: go.TextBlock.WrapFit,
+                        editable: false
+                    },
+                    new go.Binding("text", "text"))
+                )
+            );
+
+            // Exit узлы (красные)
+            diagram.nodeTemplateMap.add("exit",
+                $(go.Node, "Auto",
+                    { locationSpot: go.Spot.Center },
+                    new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+                    $(go.Shape, "RoundedRectangle", {
+                        strokeWidth: 2,
+                        stroke: "#dc2626",
+                        fill: $(go.Brush, "Linear", { 0: "#dc2626", 1: "#b91c1c" }),
+                        portId: "",
+                        cursor: "pointer",
+                        fromLinkable: true,
+                        toLinkable: true
+                    }),
+                    $(go.TextBlock, {
+                        font: "bold 11px Montserrat, sans-serif",
+                        stroke: "white",
+                        margin: 8,
+                        maxSize: new go.Size(160, NaN),
+                        wrap: go.TextBlock.WrapFit,
+                        editable: false
+                    },
+                    new go.Binding("text", "text"))
+                )
+            );
+
+            // Шаблон для связей
+            diagram.linkTemplate = $(go.Link,
+                $(go.Shape, { stroke: "#2563eb", strokeWidth: 2 }),
+                $(go.Shape, { toArrow: "standard", stroke: "#2563eb", fill: "#2563eb" }),
+                $(go.TextBlock, {
+                    textAlign: "center",
+                    font: "10px Montserrat, sans-serif",
+                    stroke: "#2563eb",
+                    segmentIndex: 0,
+                    segmentFraction: 0.5,
+                    background: "white",
+                    margin: 2
+                }, new go.Binding("text", "text"))
+            );
+
+            // Данные для диаграммы
+            const nodeDataArray = [
+                { key: "1", text: "Заявки стартапов\n~300 заявок/поток", category: "start" },
+                { key: "2", text: "Первичный отбор\n~30 заявок проходят", category: "process" },
+                { key: "3", text: "Интервью\n~15 команд проходят", category: "process" },
+                { key: "4", text: "Принять?", category: "decision" },
+                { key: "5", text: "Отказ\nОбратная связь", category: "exit" },
+                { key: "6", text: "Инкубационная программа\n3 месяца • 8-10 стартапов", category: "milestone" },
+                { key: "7", text: "Менторинг\nЕженедельные сессии", category: "process" },
+                { key: "8", text: "Обучение\nPMF • Unit Economics", category: "process" },
+                { key: "9", text: "Развитие продукта\nMVP → Product-Market Fit", category: "process" },
+                { key: "10", text: "Investor Readiness\nPitch deck • Финмодель", category: "process" },
+                { key: "11", text: "Demo Day\nПрезентация инвесторам", category: "milestone" },
+                { key: "12", text: "Интерес\nинвесторов?", category: "decision" },
+                { key: "13", text: "Привлечение инвестиций\n~20% стартапов", category: "milestone" },
+                { key: "14", text: "Масштабирование\nРост бизнеса", category: "process" },
+                { key: "15", text: "Exit\nIPO • M&A • Trade Sale", category: "exit" },
+                { key: "16", text: "Самостоятельное развитие\nБез внешних инвестиций", category: "process" },
+                { key: "17", text: "Поддержка экосистемы\nAlumni network", category: "milestone" }
+            ];
+
+            const linkDataArray = [
+                { from: "1", to: "2", text: "300→30" },
+                { from: "2", to: "3", text: "30→15" },
+                { from: "3", to: "4" },
+                { from: "4", to: "5", text: "НЕТ" },
+                { from: "4", to: "6", text: "ДА (8-10)" },
+                { from: "6", to: "7" },
+                { from: "6", to: "8" },
+                { from: "7", to: "9" },
+                { from: "8", to: "9" },
+                { from: "9", to: "10" },
+                { from: "6", to: "11" },
+                { from: "11", to: "12" },
+                { from: "12", to: "13", text: "ДА (~20%)" },
+                { from: "12", to: "16", text: "НЕТ (~80%)" },
+                { from: "13", to: "14" },
+                { from: "14", to: "15" },
+                { from: "16", to: "17" },
+                { from: "6", to: "17" }
+            ];
+
+            // Загружаем данные
+            diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+            
+            // Включаем анимацию при загрузке
+            diagram.animationManager.stopAnimation();
+            diagram.animationManager.animate();
         }
-    }
-    </script>
-    
-    <script type="module">
-        import ReactFlow, { Controls, Background } from 'react-flow-renderer';
-        
-        const { useState, useCallback, useMemo, createElement } = React;
 
-        // Кастомный компонент узла
-        const CustomNode = ({ data }) => {
-            return createElement('div', {
-                className: `custom-node ${data.type}`
-            }, [
-                createElement('div', {
-                    key: 'title',
-                    className: 'node-title'
-                }, data.title),
-                data.subtitle && createElement('div', {
-                    key: 'subtitle', 
-                    className: 'node-subtitle'
-                }, data.subtitle),
-                data.stats && createElement('div', {
-                    key: 'stats',
-                    className: 'node-stats'
-                }, data.stats)
-            ]);
-        };
-
-        // Определение типов узлов
-        const nodeTypes = {
-            custom: CustomNode
-        };
-
-        // Начальные узлы
-        const initialNodes = [
-            // Заявки
-            {
-                id: '1',
-                type: 'custom',
-                position: { x: 50, y: 50 },
-                data: { 
-                    title: 'Заявки стартапов',
-                    subtitle: 'Прием заявок через сайт, рекомендации, хакатоны',
-                    stats: '~300 заявок/поток',
-                    type: 'start'
-                }
-            },
-            
-            // Первичный отбор
-            {
-                id: '2',
-                type: 'custom',
-                position: { x: 350, y: 50 },
-                data: { 
-                    title: 'Первичный отбор',
-                    subtitle: 'Анализ заявок по критериям',
-                    stats: '~30 заявок проходят',
-                    type: 'process'
-                }
-            },
-            
-            // Интервью
-            {
-                id: '3',
-                type: 'custom',
-                position: { x: 650, y: 50 },
-                data: { 
-                    title: 'Интервью с командой',
-                    subtitle: 'Глубокое интервью и питч',
-                    stats: '~15 команд проходят',
-                    type: 'process'
-                }
-            },
-            
-            // Решение о принятии
-            {
-                id: '4',
-                type: 'custom',
-                position: { x: 950, y: 120 },
-                data: { 
-                    title: 'Принять?',
-                    type: 'decision'
-                }
-            },
-            
-            // Отказ
-            {
-                id: '5',
-                type: 'custom',
-                position: { x: 1200, y: 50 },
-                data: { 
-                    title: 'Отказ',
-                    subtitle: 'Обратная связь',
-                    type: 'exit'
-                }
-            },
-            
-            // Инкубационная программа
-            {
-                id: '6',
-                type: 'custom',
-                position: { x: 50, y: 300 },
-                data: { 
-                    title: 'Инкубационная программа',
-                    subtitle: '3 месяца интенсивного развития',
-                    stats: '8-10 стартапов/поток',
-                    type: 'milestone'
-                }
-            },
-            
-            // Еженедельный менторинг
-            {
-                id: '7',
-                type: 'custom',
-                position: { x: 350, y: 250 },
-                data: { 
-                    title: 'Менторинг',
-                    subtitle: 'Еженедельные сессии с экспертами',
-                    type: 'process'
-                }
-            },
-            
-            // Обучающие модули
-            {
-                id: '8',
-                type: 'custom',
-                position: { x: 350, y: 350 },
-                data: { 
-                    title: 'Обучение',
-                    subtitle: 'PMF, Unit Economics, Fundraising',
-                    type: 'process'
-                }
-            },
-            
-            // Product development
-            {
-                id: '9',
-                type: 'custom',
-                position: { x: 650, y: 300 },
-                data: { 
-                    title: 'Развитие продукта',
-                    subtitle: 'MVP → Product-Market Fit',
-                    type: 'process'
-                }
-            },
-            
-            // Подготовка к инвестициям
-            {
-                id: '10',
-                type: 'custom',
-                position: { x: 950, y: 300 },
-                data: { 
-                    title: 'Investor Readiness',
-                    subtitle: 'Pitch deck, финмодель, due diligence',
-                    type: 'process'
-                }
-            },
-            
-            // Demo Day
-            {
-                id: '11',
-                type: 'custom',
-                position: { x: 50, y: 550 },
-                data: { 
-                    title: 'Demo Day',
-                    subtitle: 'Презентация инвесторам',
-                    stats: 'Каждые 3 месяца',
-                    type: 'milestone'
-                }
-            },
-            
-            // Принятие решения инвесторами
-            {
-                id: '12',
-                type: 'custom',
-                position: { x: 400, y: 620 },
-                data: { 
-                    title: 'Интерес инвесторов?',
-                    type: 'decision'
-                }
-            },
-            
-            // Привлечение инвестиций
-            {
-                id: '13',
-                type: 'custom',
-                position: { x: 650, y: 550 },
-                data: { 
-                    title: 'Привлечение инвестиций',
-                    subtitle: 'Follow-on раунды',
-                    stats: '~20% стартапов',
-                    type: 'milestone'
-                }
-            },
-            
-            // Продолжение развития
-            {
-                id: '14',
-                type: 'custom',
-                position: { x: 950, y: 550 },
-                data: { 
-                    title: 'Масштабирование',
-                    subtitle: 'Рост и развитие бизнеса',
-                    type: 'process'
-                }
-            },
-            
-            // Exit
-            {
-                id: '15',
-                type: 'custom',
-                position: { x: 1200, y: 550 },
-                data: { 
-                    title: 'Exit',
-                    subtitle: 'IPO, M&A, Trade Sale',
-                    stats: '3-7 лет',
-                    type: 'exit'
-                }
-            },
-            
-            // Альтернативный путь - самостоятельное развитие
-            {
-                id: '16',
-                type: 'custom',
-                position: { x: 650, y: 750 },
-                data: { 
-                    title: 'Самостоятельное развитие',
-                    subtitle: 'Развитие без внешних инвестиций',
-                    type: 'process'
-                }
-            },
-            
-            // Поддержка экосистемы
-            {
-                id: '17',
-                type: 'custom',
-                position: { x: 50, y: 800 },
-                data: { 
-                    title: 'Поддержка экосистемы',
-                    subtitle: 'Alumni network, менторство, партнерства',
-                    type: 'milestone'
-                }
-            }
-        ];
-
-        // Связи между узлами (с type: 'smoothstep' для react-flow-renderer@10)
-        const initialEdges = [
-            { id: 'e1-2', source: '1', target: '2', animated: true, label: '300 → 30', type: 'smoothstep' },
-            { id: 'e2-3', source: '2', target: '3', animated: true, label: '30 → 15', type: 'smoothstep' },
-            { id: 'e3-4', source: '3', target: '4', animated: true, type: 'smoothstep' },
-            { id: 'e4-5', source: '4', target: '5', label: 'НЕТ (~5)', type: 'smoothstep' },
-            { id: 'e4-6', source: '4', target: '6', animated: true, label: 'ДА (8-10)', type: 'smoothstep' },
-            
-            { id: 'e6-7', source: '6', target: '7', animated: true, type: 'smoothstep' },
-            { id: 'e6-8', source: '6', target: '8', animated: true, type: 'smoothstep' },
-            { id: 'e7-9', source: '7', target: '9', animated: true, type: 'smoothstep' },
-            { id: 'e8-9', source: '8', target: '9', animated: true, type: 'smoothstep' },
-            { id: 'e9-10', source: '9', target: '10', animated: true, type: 'smoothstep' },
-            
-            { id: 'e6-11', source: '6', target: '11', animated: true, type: 'smoothstep' },
-            { id: 'e11-12', source: '11', target: '12', animated: true, type: 'smoothstep' },
-            
-            { id: 'e12-13', source: '12', target: '13', animated: true, label: 'ДА (~20%)', type: 'smoothstep' },
-            { id: 'e12-16', source: '12', target: '16', label: 'НЕТ (~80%)', type: 'smoothstep' },
-            
-            { id: 'e13-14', source: '13', target: '14', animated: true, type: 'smoothstep' },
-            { id: 'e14-15', source: '14', target: '15', animated: true, type: 'smoothstep' },
-            
-            { id: 'e16-17', source: '16', target: '17', animated: true, type: 'smoothstep' },
-            { id: 'e6-17', source: '6', target: '17', animated: true, type: 'smoothstep' },
-        ];
-
-        // Главный компонент Flow
-        const FlowChart = () => {
-            const [nodes, setNodes] = useState(initialNodes);
-            const [edges, setEdges] = useState(initialEdges);
-
-            return createElement(ReactFlow, {
-                elements: [...nodes, ...edges],
-                nodeTypes,
-                fitView: true,
-                attributionPosition: 'bottom-left'
-            }, [
-                createElement(Controls, { key: 'controls' }),
-                createElement(Background, { 
-                    key: 'background',
-                    color: '#f1f5f9',
-                    gap: 20
-                })
-            ]);
-        };
-
-        // Рендер компонента
-        const container = document.getElementById('reactflow');
-        if (ReactDOM.createRoot) {
-            const root = ReactDOM.createRoot(container);
-            root.render(createElement(FlowChart));
-        } else {
-            ReactDOM.render(createElement(FlowChart), container);
-        }
+        // Инициализация после загрузки DOM
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
