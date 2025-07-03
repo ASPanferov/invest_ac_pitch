@@ -381,30 +381,40 @@
         </div>
     </div>
 
-    <!-- React, React DOM, and React Flow -->
+    <!-- React and ReactDOM via CDN -->
     <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/react-flow-renderer@10.3.17/dist/umd/index.js"></script>
     
-    <script>
-        const { useState, useCallback, useMemo } = React;
-        const ReactFlow = window.ReactFlowRenderer.default;
-        const { Controls, Background } = window.ReactFlowRenderer;
+    <!-- Import maps for ES modules -->
+    <script type="importmap">
+    {
+        "imports": {
+            "react": "https://esm.sh/react@17",
+            "react-dom": "https://esm.sh/react-dom@17",
+            "react-flow-renderer": "https://esm.sh/react-flow-renderer@10"
+        }
+    }
+    </script>
+    
+    <script type="module">
+        import ReactFlow, { Controls, Background } from 'react-flow-renderer';
+        
+        const { useState, useCallback, useMemo, createElement } = React;
 
         // Кастомный компонент узла
         const CustomNode = ({ data }) => {
-            return React.createElement('div', {
+            return createElement('div', {
                 className: `custom-node ${data.type}`
             }, [
-                React.createElement('div', {
+                createElement('div', {
                     key: 'title',
                     className: 'node-title'
                 }, data.title),
-                data.subtitle && React.createElement('div', {
+                data.subtitle && createElement('div', {
                     key: 'subtitle', 
                     className: 'node-subtitle'
                 }, data.subtitle),
-                data.stats && React.createElement('div', {
+                data.stats && createElement('div', {
                     key: 'stats',
                     className: 'node-stats'
                 }, data.stats)
@@ -660,14 +670,14 @@
             const [nodes, setNodes] = useState(initialNodes);
             const [edges, setEdges] = useState(initialEdges);
 
-            return React.createElement(ReactFlow, {
+            return createElement(ReactFlow, {
                 elements: [...nodes, ...edges],
                 nodeTypes,
                 fitView: true,
                 attributionPosition: 'bottom-left'
             }, [
-                React.createElement(Controls, { key: 'controls' }),
-                React.createElement(Background, { 
+                createElement(Controls, { key: 'controls' }),
+                createElement(Background, { 
                     key: 'background',
                     color: '#f1f5f9',
                     gap: 20
@@ -675,17 +685,14 @@
             ]);
         };
 
-        // Ждем загрузки всех скриптов
-        window.addEventListener('load', () => {
-            // Рендер компонента
-            const container = document.getElementById('reactflow');
-            if (ReactDOM.createRoot) {
-                const root = ReactDOM.createRoot(container);
-                root.render(React.createElement(FlowChart));
-            } else {
-                ReactDOM.render(React.createElement(FlowChart), container);
-            }
-        });
+        // Рендер компонента
+        const container = document.getElementById('reactflow');
+        if (ReactDOM.createRoot) {
+            const root = ReactDOM.createRoot(container);
+            root.render(createElement(FlowChart));
+        } else {
+            ReactDOM.render(createElement(FlowChart), container);
+        }
     </script>
 </body>
 </html>
