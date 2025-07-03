@@ -38,13 +38,15 @@ Our conservative financial projections show:
 **View the presentation online:**
 - **English**: [Live Demo](https://aspanferov.github.io/invest_ac_pitch/)  
 - **Russian**: [Русская версия](https://aspanferov.github.io/invest_ac_pitch/angel_connect_presentation.html)
+- **Startup Flow Schema**: [Интерактивная схема](https://aspanferov.github.io/invest_ac_pitch/schema.html)
 
 ## 📁 Repository Structure
 
 ```
 /
 ├── index.html                          # English presentation
-├── angel_connect_presentation.html     # Russian presentation  
+├── angel_connect_presentation.html     # Russian presentation
+├── schema.html                        # Interactive startup flow schema
 ├── README.md                          # This documentation
 └── assets/                           # Supporting materials
 ```
@@ -55,6 +57,7 @@ Our conservative financial projections show:
 - **Print Ready**: A4 landscape format optimized
 - **Languages**: Bilingual (English/Russian) with switcher
 - **Styling**: Modern, professional design with Montserrat fonts
+- **Interactive Schema**: React Flow visualization of startup journey
 - **Compatibility**: Works across all modern browsers
 
 ## 📧 Contact
@@ -84,6 +87,25 @@ Uzbekistan's startup ecosystem is experiencing unprecedented growth:
 3. **Government Support**: Strong partnerships with IT Park Uzbekistan
 4. **Conservative Approach**: Starting with proof of concept before scaling
 5. **International Focus**: Building globally scalable companies
+
+## 🔄 Interactive Startup Flow Schema
+
+Our new **interactive visualization** shows the complete journey of startups through Angel Connect:
+
+### Key Process Stages:
+1. **Application Process** (~300 applications → 8-10 selected)
+2. **3-Month Incubation Program** (intensive development)
+3. **Demo Day & Investor Matching** (quarterly events)
+4. **Follow-on Investment** (~20% success rate)
+5. **Scaling & Exit Strategy** (3-7 year horizon)
+
+### Visual Features:
+- **Interactive React Flow diagram** with drag & zoom
+- **Color-coded stages**: Start points, processes, milestones, decisions, exits
+- **Real metrics**: Acceptance rates, success statistics, timelines
+- **Process transparency**: Clear visualization of startup journey
+
+**[→ View Interactive Schema](https://aspanferov.github.io/invest_ac_pitch/schema.html)**
 
 ---
 
