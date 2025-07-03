@@ -287,7 +287,7 @@
     </style>
     
     <!-- React Flow CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xyflow/react@12.0.4/dist/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/react-flow-renderer@10.3.17/dist/style.css">
 </head>
 <body>
     <div class="header">
@@ -382,13 +382,14 @@
     </div>
 
     <!-- React, React DOM, and React Flow -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@xyflow/react@12.0.4/dist/umd/index.js"></script>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/react-flow-renderer@10.3.17/dist/umd/index.js"></script>
     
     <script>
         const { useState, useCallback, useMemo } = React;
-        const { ReactFlow, Controls, Background, useNodesState, useEdgesState } = ReactFlowLib;
+        const ReactFlow = window.ReactFlowRenderer.default;
+        const { Controls, Background } = window.ReactFlowRenderer;
 
         // Кастомный компонент узла
         const CustomNode = ({ data }) => {
@@ -627,43 +628,40 @@
             }
         ];
 
-        // Связи между узлами
+        // Связи между узлами (с type: 'smoothstep' для react-flow-renderer@10)
         const initialEdges = [
-            { id: 'e1-2', source: '1', target: '2', animated: true, label: '300 → 30' },
-            { id: 'e2-3', source: '2', target: '3', animated: true, label: '30 → 15' },
-            { id: 'e3-4', source: '3', target: '4', animated: true },
-            { id: 'e4-5', source: '4', target: '5', label: 'НЕТ (~5)' },
-            { id: 'e4-6', source: '4', target: '6', animated: true, label: 'ДА (8-10)' },
+            { id: 'e1-2', source: '1', target: '2', animated: true, label: '300 → 30', type: 'smoothstep' },
+            { id: 'e2-3', source: '2', target: '3', animated: true, label: '30 → 15', type: 'smoothstep' },
+            { id: 'e3-4', source: '3', target: '4', animated: true, type: 'smoothstep' },
+            { id: 'e4-5', source: '4', target: '5', label: 'НЕТ (~5)', type: 'smoothstep' },
+            { id: 'e4-6', source: '4', target: '6', animated: true, label: 'ДА (8-10)', type: 'smoothstep' },
             
-            { id: 'e6-7', source: '6', target: '7', animated: true },
-            { id: 'e6-8', source: '6', target: '8', animated: true },
-            { id: 'e7-9', source: '7', target: '9', animated: true },
-            { id: 'e8-9', source: '8', target: '9', animated: true },
-            { id: 'e9-10', source: '9', target: '10', animated: true },
+            { id: 'e6-7', source: '6', target: '7', animated: true, type: 'smoothstep' },
+            { id: 'e6-8', source: '6', target: '8', animated: true, type: 'smoothstep' },
+            { id: 'e7-9', source: '7', target: '9', animated: true, type: 'smoothstep' },
+            { id: 'e8-9', source: '8', target: '9', animated: true, type: 'smoothstep' },
+            { id: 'e9-10', source: '9', target: '10', animated: true, type: 'smoothstep' },
             
-            { id: 'e6-11', source: '6', target: '11', animated: true },
-            { id: 'e11-12', source: '11', target: '12', animated: true },
+            { id: 'e6-11', source: '6', target: '11', animated: true, type: 'smoothstep' },
+            { id: 'e11-12', source: '11', target: '12', animated: true, type: 'smoothstep' },
             
-            { id: 'e12-13', source: '12', target: '13', animated: true, label: 'ДА (~20%)' },
-            { id: 'e12-16', source: '12', target: '16', label: 'НЕТ (~80%)' },
+            { id: 'e12-13', source: '12', target: '13', animated: true, label: 'ДА (~20%)', type: 'smoothstep' },
+            { id: 'e12-16', source: '12', target: '16', label: 'НЕТ (~80%)', type: 'smoothstep' },
             
-            { id: 'e13-14', source: '13', target: '14', animated: true },
-            { id: 'e14-15', source: '14', target: '15', animated: true },
+            { id: 'e13-14', source: '13', target: '14', animated: true, type: 'smoothstep' },
+            { id: 'e14-15', source: '14', target: '15', animated: true, type: 'smoothstep' },
             
-            { id: 'e16-17', source: '16', target: '17', animated: true },
-            { id: 'e6-17', source: '6', target: '17', animated: true },
+            { id: 'e16-17', source: '16', target: '17', animated: true, type: 'smoothstep' },
+            { id: 'e6-17', source: '6', target: '17', animated: true, type: 'smoothstep' },
         ];
 
         // Главный компонент Flow
         const FlowChart = () => {
-            const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-            const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+            const [nodes, setNodes] = useState(initialNodes);
+            const [edges, setEdges] = useState(initialEdges);
 
             return React.createElement(ReactFlow, {
-                nodes,
-                edges,
-                onNodesChange,
-                onEdgesChange,
+                elements: [...nodes, ...edges],
                 nodeTypes,
                 fitView: true,
                 attributionPosition: 'bottom-left'
@@ -677,10 +675,17 @@
             ]);
         };
 
-        // Рендер компонента
-        const container = document.getElementById('reactflow');
-        const root = ReactDOM.createRoot(container);
-        root.render(React.createElement(FlowChart));
+        // Ждем загрузки всех скриптов
+        window.addEventListener('load', () => {
+            // Рендер компонента
+            const container = document.getElementById('reactflow');
+            if (ReactDOM.createRoot) {
+                const root = ReactDOM.createRoot(container);
+                root.render(React.createElement(FlowChart));
+            } else {
+                ReactDOM.render(React.createElement(FlowChart), container);
+            }
+        });
     </script>
 </body>
 </html>
